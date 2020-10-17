@@ -1,0 +1,6 @@
+D:\Code Repository\TODO-list\TodoList\Com.Mulei.Model\bin\Debug\Com.Mulei.Model.dll
+D:\Code Repository\TODO-list\TodoList\Com.Mulei.Model\bin\Debug\Com.Mulei.Model.pdb
+D:\Code Repository\TODO-list\TodoList\Com.Mulei.Model\obj\Debug\Com.Mulei.Model.csprojAssemblyReference.cache
+D:\Code Repository\TODO-list\TodoList\Com.Mulei.Model\obj\Debug\Com.Mulei.Model.csproj.CoreCompileInputs.cache
+D:\Code Repository\TODO-list\TodoList\Com.Mulei.Model\obj\Debug\Com.Mulei.Model.dll
+D:\Code Repository\TODO-list\TodoList\Com.Mulei.Model\obj\Debug\Com.Mulei.Model.pdb
