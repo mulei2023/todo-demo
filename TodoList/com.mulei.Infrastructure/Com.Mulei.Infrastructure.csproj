@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataExtension\Extension.cs" />
     <Compile Include="Encryption\Encyptor.cs" />
     <Compile Include="MysqlHelper\MysqlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
