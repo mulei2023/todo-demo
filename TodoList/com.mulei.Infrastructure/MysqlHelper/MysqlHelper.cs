@@ -6,82 +6,45 @@ namespace Com.Mulei.Infrastructure
 {
     public static class MysqlHelper
     {
-    
-        public static string Conn = ""; 
 
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="connectionString"></param>
-       /// <param name="cmdType"></param>
-       /// <param name="cmdText"></param>
-       /// <param name="commandParameters"></param>
-       /// <returns></returns>
-        public static int ExecuteNonQuery(string connectionString, System.Data.CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
-        {
+        public static string ConnctionStr = "";
 
-            MySqlCommand cmd = new MySqlCommand();
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                PrepareCommand(cmd, conn, cmdText, commandParameters);
-                int val = cmd.ExecuteNonQuery();
-                cmd.Parameters.Clear();
-                return val;
-            }
-        }
-
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="connection"></param>
-       /// <param name="cmdType"></param>
-       /// <param name="cmdText"></param>
-       /// <param name="commandParameters"></param>
-       /// <returns></returns>
-        public static int ExecuteNonQuery(MySqlConnection connection, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
-        {
-
-            MySqlCommand cmd = new MySqlCommand();
-
-            PrepareCommand(cmd, connection, cmdText, commandParameters);
-            int val = cmd.ExecuteNonQuery();
-            //cmd.Parameters.Clear();
-            return val;
-        }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="trans"></param>
+        /// <param name="connection"></param>
         /// <param name="cmdType"></param>
         /// <param name="cmdText"></param>
         /// <param name="commandParameters"></param>
         /// <returns></returns>
-        public static int ExecuteNonQuery(MySqlTransaction trans, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
+        public static int ExecuteNonQuery(string cmdText, params MySqlParameter[] commandParameters)
         {
+
             MySqlCommand cmd = new MySqlCommand();
-            PrepareCommand(cmd, trans.Connection, cmdText, commandParameters);
+            MySqlConnection conn = new MySqlConnection(ConnctionStr);
+            PrepareCommand(cmd, conn, cmdText, commandParameters);
             int val = cmd.ExecuteNonQuery();
-            cmd.Parameters.Clear();
+            //cmd.Parameters.Clear();
             return val;
         }
 
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="connectionString"></param>
-       /// <param name="cmdType"></param>
-       /// <param name="cmdText"></param>
-       /// <param name="commandParameters"></param>
-       /// <returns></returns>
-        public static MySqlDataReader ExecuteReader(string connectionString, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <param name="cmdType"></param>
+        /// <param name="cmdText"></param>
+        /// <param name="commandParameters"></param>
+        /// <returns></returns>
+        public static MySqlDataReader ExecuteReader(string cmdText, params MySqlParameter[] commandParameters)
         {
             MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection conn = new MySqlConnection(connectionString);
+            MySqlConnection conn = new MySqlConnection(ConnctionStr);
 
             try
             {
-                PrepareCommand(cmd, conn,  cmdText, commandParameters);
+                PrepareCommand(cmd, conn, cmdText, commandParameters);
                 MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 cmd.Parameters.Clear();
                 return reader;
@@ -93,11 +56,11 @@ namespace Com.Mulei.Infrastructure
             }
         }
 
-        
-        public static DataSet GetDataSet(string connectionString, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
+
+        public static DataSet GetDataSet(string cmdText, params MySqlParameter[] commandParameters)
         {
             MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection conn = new MySqlConnection(connectionString);
+            MySqlConnection conn = new MySqlConnection(ConnctionStr);
 
 
             try
@@ -105,7 +68,7 @@ namespace Com.Mulei.Infrastructure
                 PrepareCommand(cmd, conn, cmdText, commandParameters);
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
                 adapter.SelectCommand = cmd;
-                System.Data.DataSet ds = new System.Data.DataSet();
+                DataSet ds = new DataSet();
 
                 adapter.Fill(ds);
                 cmd.Parameters.Clear();
@@ -119,17 +82,17 @@ namespace Com.Mulei.Infrastructure
         }
 
 
-        public static System.Data.DataTable GetDataTable(string connectionString, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
+        public static DataTable GetDataTable(string cmdText, params MySqlParameter[] commandParameters)
         {
             MySqlCommand cmd = new MySqlCommand();
-            MySqlConnection conn = new MySqlConnection(connectionString);
+            MySqlConnection conn = new MySqlConnection(ConnctionStr);
 
             try
             {
                 PrepareCommand(cmd, conn, cmdText, commandParameters);
                 MySqlDataAdapter adapter = new MySqlDataAdapter();
                 adapter.SelectCommand = cmd;
-                DataTable ds = new System.Data.DataTable();
+                DataTable ds = new DataTable();
 
                 adapter.Fill(ds);
                 cmd.Parameters.Clear();
@@ -141,24 +104,24 @@ namespace Com.Mulei.Infrastructure
                 throw e;
             }
         }
-        
 
 
-        
-        public static object ExecuteScalar(string connectionString, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
+
+
+        public static object ExecuteScalar(string cmdText, params MySqlParameter[] commandParameters)
         {
             MySqlCommand cmd = new MySqlCommand();
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(ConnctionStr))
             {
-                PrepareCommand(cmd, connection,  cmdText, commandParameters);
+                PrepareCommand(cmd, connection, cmdText, commandParameters);
                 object val = cmd.ExecuteScalar();
                 cmd.Parameters.Clear();
                 return val;
             }
         }
 
-        public static object ExecuteScalar(MySqlConnection connection, CommandType cmdType, string cmdText, params MySqlParameter[] commandParameters)
+        public static object ExecuteScalar(MySqlConnection connection, string cmdText, params MySqlParameter[] commandParameters)
         {
 
             MySqlCommand cmd = new MySqlCommand();
@@ -172,26 +135,23 @@ namespace Com.Mulei.Infrastructure
 
 
 
-     
+
         private static void PrepareCommand(MySqlCommand cmd, MySqlConnection conn, string cmdText, MySqlParameter[] cmdParms)
         {
 
             if (conn.State != ConnectionState.Open)
-                conn.Open();
+            { conn.Open(); }
 
             cmd.Connection = conn;
             cmd.CommandText = cmdText;
-
-         
-
             cmd.CommandType = CommandType.Text;
 
             if (cmdParms != null)
-
             {
 
                 foreach (MySqlParameter parm in cmdParms)
-                    cmd.Parameters.Add(parm);
+                { cmd.Parameters.Add(parm); }
+
             }
         }
     }
